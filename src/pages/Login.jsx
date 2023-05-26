@@ -27,6 +27,7 @@ const Login = () => {
       return;
     }
     console.log(formState);
+    alert("Login Sucessfully");
   };
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center bg-blue-100 gap-4">
