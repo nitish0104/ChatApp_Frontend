@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const initialState = {
     email: "",
     username: "",
@@ -10,7 +13,7 @@ const Signup = () => {
   };
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [formState, setformState] = useState(initialState);
-
+  const [pic, setpic] = useState();
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -20,6 +23,37 @@ const Signup = () => {
       ...formState,
       [e.target.id]: e.target.value,
     });
+  };
+
+  const postDetails = (pics) => {
+    if (pics === undefined) {
+      alert("please select an image");
+      return;
+    }
+    if (
+      pics.type === "image/jpeg" ||
+      pics.type === "image/png" ||
+      pics.type === "image/jpg"
+    ) {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_present", "ChatApp");
+      data.append("cloud_name", "duluif3zv");
+      fetch("https://api.cloudinary.com/v1_1/duluif3zv", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setpic(data.url.toString());
+          console.log(data.url.toString());
+        })
+        .catch((err) => {
+          console.log(`Pic Not Found ${err}`);
+        });
+    } else {
+      alert("data must b in jpeg and png");
+    }
   };
   const handleSignup = () => {
     if (formState.password === formState.confirmpassword) {
@@ -32,8 +66,36 @@ const Signup = () => {
         return;
       }
       console.log(formState);
+      console.log(pic);
     } else {
       alert("password Doesnt Match");
+    }
+    try {
+      axios(
+        "http://localhost:5000/api/user/signup",
+        {
+          method: "POST",
+          data: formState,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("token", res.data.token);
+          navigate("/testForm");
+          console.log("sucessfully Signedup");
+        })
+        .catch((err) => console.log(err));
+
+      //   toast.success("sucessfully signup");
+    } catch (error) {
+      //   toast.error("some error");
+      console.log(error);
     }
   };
   return (
@@ -132,7 +194,7 @@ const Signup = () => {
               Profile Picture
             </label>
             <input
-              onChange={handleFormChange}
+              onChange={(e) => postDetails(e.target.files[0])}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="pic"
               type="file"
@@ -150,7 +212,7 @@ const Signup = () => {
             </button>
             <a
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              href="/Login"
+              href="/"
             >
               Already have Account?
             </a>

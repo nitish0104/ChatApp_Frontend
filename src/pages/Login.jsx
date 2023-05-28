@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
+import axios from "axios";
 
 const Login = () => {
   const initialState = {
-    username: "",
+    email: "",
     password: "",
   };
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -26,8 +27,32 @@ const Login = () => {
       alert("Please fill in all required fields.");
       return;
     }
-    console.log(formState);
-    alert("Login Sucessfully");
+    try {
+      axios(
+        "http://localhost:5000/api/user/signin",
+        {
+          method: "POST",
+          data: formState,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("token", res.data.token);
+          console.log("sucessfully Logedin");
+          // navigate("/");
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+    // console.log(formState);
+    // alert("Login Sucessfully");
   };
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center bg-blue-100 gap-4">
@@ -39,17 +64,17 @@ const Login = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="username"
+              htmlFor="email"
             >
-              Username
+              Email
             </label>
             <input
               onChange={handleFormChange}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
-              type="text"
-              placeholder="Enter your username"
+              id="email"
+              type="email"
+              placeholder="Enter your email"
             />
           </div>
           <div className="mb-6">
