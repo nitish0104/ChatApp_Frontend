@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const initialState = {
     email: "",
     password: "",
@@ -44,6 +47,11 @@ const Login = () => {
         .then((res) => {
           console.log(res);
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userInfo", JSON.stringify(res.data));
+          console.log(res.data.user);
+          console.log(res.data.user.email);
+          navigate("/chat");
+
           console.log("sucessfully Logedin");
           // navigate("/");
         })
@@ -109,13 +117,13 @@ const Login = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
             >
-              Sign Up
+              Login{" "}
             </button>
             <a
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
               href="/Signup"
             >
-              Already have Account?
+              Don't have Account?
             </a>
           </div>
         </form>

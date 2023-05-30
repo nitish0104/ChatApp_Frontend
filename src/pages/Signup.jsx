@@ -87,7 +87,9 @@ const Signup = () => {
         .then((res) => {
           console.log(res);
           localStorage.setItem("token", res.data.token);
-          navigate("/testForm");
+          localStorage.setItem("userInfo", JSON.stringify(res.data));
+          console.log(res.data);
+          navigate("/chat");
           console.log("sucessfully Signedup");
         })
         .catch((err) => console.log(err));

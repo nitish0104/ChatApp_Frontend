@@ -2,17 +2,21 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import LoginForm from './Components/test/Loginfoem';
+import Chat from './pages/Chat';
+import ChatProvider from './Context/chatProvider';
 
 function App() {
   return (
     <>
       <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/testForm" element={<LoginForm />} />
-        </Routes>
+        <ChatProvider>
+
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/chat" element={<Chat />} />
+          </Routes>
+        </ChatProvider>
       </Router>
     </>
   );
