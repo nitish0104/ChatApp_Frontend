@@ -50,7 +50,7 @@ const Login = () => {
           localStorage.setItem("userInfo", JSON.stringify(res.data));
           console.log(res.data.user);
           console.log(res.data.user.email);
-          navigate("/chat");
+          navigate(`chat/${res.data.user._id}`);
 
           console.log("sucessfully Logedin");
           // navigate("/");

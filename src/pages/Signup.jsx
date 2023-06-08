@@ -88,8 +88,8 @@ const Signup = () => {
           console.log(res);
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userInfo", JSON.stringify(res.data));
-          console.log(res.data);
-          navigate("/chat");
+          console.log(res.data._id);
+          navigate(`chat/${res.data._id}`);
           console.log("sucessfully Signedup");
         })
         .catch((err) => console.log(err));
